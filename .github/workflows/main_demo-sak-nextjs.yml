@@ -20,11 +20,17 @@ jobs:
         run: |
           npm ci
           npm run build
-          mkdir -p deploy
+          # Prepare deployment folder
+          rm -rf deploy && mkdir deploy
+          # Copy standalone server output
           cp -r .next/standalone/* deploy/
+          # Copy static assets
           mkdir -p deploy/.next
           cp -r .next/static deploy/.next/static
+          # Copy public assets if available
           if [ -d public ]; then cp -r public deploy/public; fi
+          # Copy package files
+          cp package.json package-lock.json deploy/
 
       - name: Zip deployment package
         run: |
